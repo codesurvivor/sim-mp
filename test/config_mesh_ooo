@@ -1,0 +1,237 @@
+-hotspot:flp			/home/vax2/u27/xue/CMP_baseline/run/floorplan.flp
+
+-hotspot:active 		FALSE
+# random number generator seed (0 for timer seed)
+-seed                             1
+
+#-redir:sim a2.out
+-nice 				10
+
+-max:inst  800000000
+
+-network:meshsize	8	
+
+-fetch:speed			  1
+
+# instruction fetch queue size (in insts)
+-fetch:ifqsize                    4
+#16
+
+# extra branch mis-prediction latency		--- made 5 for Alpha
+-fetch:mplat                      7
+
+#network configuration type {FSOI|MESH|COMB|HYBRID}
+-network       MESH
+
+#inter chip network configuration type {FSOI|MESH}
+-network:intercfg   FSOI
+
+#intra chip network configuration type {FSOI|MESH|
+-network:intracfg   MESH
+
+#number of chips in the system
+-network:chipnum    4
+
+# branch predictor type {nottaken|taken|perfect|bimod|2lev}
+-bpred                        bimod 
+
+# bimodal predictor BTB size
+-bpred:bimod                   2048 
+
+# 2-level predictor config (<l1size> <l2size> <hist_size>)
+-bpred:2lev            1 1024 8 
+
+#-bpred:comb		8192
+#-bpred:ras		32
+#-bpred:btb		4096 4
+
+# instruction decode B/W (insts/cycle)
+-decode:width                4   
+
+# Number of thread fetch (thrd/cycle<=8)
+#-thrdf:limit                24
+
+# instruction fetch B/w per thread (insts/cycle<=decode_width)
+-instthrdf:width           4
+
+# integer physical register file size (>32)
+-ipregf:size             64 
+
+# floating point physical register file size (>32)
+-fpregf:size             64
+
+# integer queue size (insts)
+-iqueue:size             16
+
+# floating point queue size (insts)
+-fqueue:size            16
+
+# instruction issue B/W (insts/cycle)
+-issue:width            4
+# 10
+
+-commit:width 		4         
+
+# run pipeline with in-order issue		--- made true for Alpha
+-issue:inorder                false
+
+# issue instructions down wrong execution paths
+-issue:wrongpath               true
+
+# register update unit (RUU) size
+-ruu:size              16 
+#  16 
+#      64
+
+# load/store queue (LSQ) size			--- made 16 just to test
+-lsq:size                 8
+#      8 
+#-lsq:size                        1024
+-lq:size	16
+-sq:size	16
+
+# l1 data cache config, i.e., {<config>|none}	--- made alpha-like
+-cache:dl1             dl1:128:32:2:l
+
+# l1 data cache hit latency (in cycles)
+-cache:dl1lat                     2
+
+# l2 data cache config, i.e., {<config>|none}	--- made alpha-like (SA=4!!!)
+#-cache:dl2             ul2:4096:128:8:l
+-cache:dl2             ul2:8192:64:8:l
+
+# l2 data cache hit latency (in cycles)		--- made 7 for Alpha
+-cache:dl2lat                     15
+
+# l1 inst cache config, i.e., {<config>|dl1|dl2|none} --- made alpha-like
+-cache:il1             il1:256:64:2:l
+
+# l1 instruction cache hit latency (in cycles)
+-cache:il1lat                     1
+
+# l2 instruction cache config, i.e., {<config>|dl2|none}
+-cache:il2                      dl2
+
+# l2 instruction cache hit latency (in cycles)	--- made 7 for Alpha
+-cache:il2lat                     15
+
+# flush caches on system calls
+-cache:flush                  false
+
+# convert 64-bit inst addresses to 32-bit inst equivalents
+-cache:icompress              false
+
+# memory access latency (<first_chunk> <inter_chunk>) --- Probably correct
+-mem:lat               200 12
+
+# memory access bus width (in bytes)		--- Probably correct
+-mem:width                       16
+
+-mem:ports			8
+
+-mem:speed			32
+
+# instruction TLB config, i.e., {<config>|none} --- made alpha-like
+-tlb:itlb              itlb:32:4096:4:l
+
+# data TLB config, i.e., {<config>|none} 	--- made alpha-like
+-tlb:dtlb              dtlb:64:4096:4:l
+
+# inst/data TLB miss latency (in cycles)	--- Probably correct
+-tlb:lat                         250
+
+# total number of integer ALU's available	--- made 2 for Alpha
+-res:ialu                        4 
+
+# total number of memory system banks available (to CPU)
+-res:membank                      1
+
+# total number of memory system ports available (per bank)
+-res:memport                      2
+
+# total number of floating point ALU's available --- made 1 for Alpha
+-res:fpalu                       8 
+
+# operate in backward-compatible bugs mode (for testing only)
+-bugcompat                    false
+
+#Maximum Number of threads a process if allowed to forked. This also includes the parent
+-maxThrds		    24
+
+#COHERENT_CACHE
+-Coherent_Cache		    1
+
+#SPECBENCHMARKS
+-SPEC			    0
+
+#MSI
+-MSI_prot		    1
+
+# input buffer size (flit unit)
+-network:input_buffer_size              48
+                                                                                                                                                                                                     
+# output buffer size (flit unit)
+-network:output_buffer_size             16
+                                                                                                                                                                                                     
+# packet queue size (packet unit, used for output buffer)
+-network:packet_queue_size              256
+                                                                                                                                                                                                    
+# total number of receivers for meta packets
+-network:meta_receivers                 2
+                                                                                                                                                                                                     
+# total number of receivers for data packets
+-network:data_receivers                 2
+                                                                                                                                                                                                    
+# total numbers of transmitters
+-network:transmitters                   1
+                                                                                                                                                                                                     
+# number of confirmation transmitters
+-network:confirmation_trans             1
+                                                                                                                                                                                                     
+# number of confirmation receiver
+-network:confirmation_receiver          1
+                                                                                                                                                                                                     
+# laser cycle (1 CPU cycle)
+-network:laser_cycle                    12
+                                                                                                                                                                                                     
+# how many bits can be transfered in one laser cycle
+-network:meta_transmitter_size            6
+-network:data_transmitter_size            6
+                                                                                                                                                                                                    
+# flit size (bits)
+-network:flit_size                      72
+                                                                                                                                                                                                     
+# Data packet size
+-network:data_packet_size               5
+                                                                                                                                                                                                     
+# meta packet size
+-network:meta_packet_size               1
+                                                                                                                                                                                                     
+# confirmation bit
+-network:confirmation_bit               1
+                                                                                                                                                                                                     
+# laser warm up time
+-network:laser_warmup_time              1
+                                                                                                                                                                                                     
+# laser set up time
+-network:laser_setup_time               1
+                                                                                                                                                                                                     
+# laser switch off time out
+-network:laser_switchoff_timeout        1
+
+# data channel time slot(1 is time slot, 0 means not time slot)
+-network:data_chan_timeslot            1
+
+# retry algorithm -exponential backoff(0 is non_exp_backoff, 1 is exp_backoff, 2 is hybrid)
+-network:exp_backoff           1
+                                                                                                                                                                                                     
+# slot num for the beginning
+-network:first_slot_num        3
+
+# retry packet algorithm (1 is TBEB, 0 is the others)
+-network:retry_algr             0
+                                                                                                                                                                                                    
+# TBEB algorithm (0 is basic, 1 is randomly setting initial window size, 2 is randomly setting initial and end window size)
+-network:TBEB_algr              0
+
+#-network:confirmation_time	18

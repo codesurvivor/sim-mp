@@ -1,0 +1,1 @@
+/home/w/CMP_WXH/MIPS_CMP_DEV/MP_MIPS_3D/sim-outorder -redir:sim /home/w/CMP_WXH/program/test.txt -redir:dump /home/w/CMP_WXH/program/test.out -config ./config_mesh_ooo_3D -max:barrier 0 -max:inst 1000000000 mips64.bnc

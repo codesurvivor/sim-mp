@@ -1,0 +1,64 @@
+Build for single-core non-parallel applications without timing simulations:
+1. un-comment DO_COMPLETE_FASTFWD flag in MTA.h
+
+Build for single-core non-parallel applications:
+1. comment COLLECT_STAT_STARTUP flag in context.h
+2. MAXTHREADS 1 in smt.h
+
+Build for multi-core non-parallel applications:
+1. comment COLLECT_STAT_STARTUP flag in context.h
+2. MAXTHREADS 16 in smt.h	(todo: simulator does not support page table. Hence there may be a lot of false sharing the cache)
+
+Build for multi-core parallel applications:
+1. un-comment COLLECT_STAT_STARTUP flag in context.h
+2. MAXTHREADS 16 in smt.h	(Or as many threads needed)
+
+Build for multi-core parallel applications without timing simulations:
+1. un-comment COLLECT_STAT_STARTUP flag in context.h
+2. MAXTHREADS 16 in smt.h	(Or as many threads needed)
+3. un-comment PARALLEL_EMUL flag in context.h
+
+--------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
+There are several configuration in this file system:
+
+1. Popnet network which is changed in POPNET defination in file <cache.h>
+
+2. Optical network which is changed in OPTICAL_INTERCONNECT defination in file <cache.h>
+
+3. L2 cache bank system which is changed in DL2_BANK defination in file <cache.h>
+	bank number is defined in Configuration file: 
+		-cache:dl2lat:		32
+	default number is 32, which is 2 banks per node. 
+
+4. MSHR for DL1 and L2 cache which is changed in DCAHE_MSHR defination, including the MSHR size which is 32 originally. They are in file <cache.h>
+
+5. There exits transaction buffer which is implemented with directory event queue:
+	if the comming transaction is Read miss, and the directory is bussy in handling another Read miss, then this comming transaction can proceed anyway because this did not affect the final result. (In fact, there maybe more false sharing when L2 cache block size is large than L1 cache block size, which can change number of network access)
+	Of course in order to inforce the program order, before proceeding the following transaction, first checking if there are Write miss to the same block size.
+
+	The transaction buffer is defined by TRAN_BUF in file <cache.c>
+	 
+6. There are two algorism for receiver choosing:
+	0 -- is choosing a receiver on destination using round_robin method, each node has its fixed receiver
+	1 -- is randomly choosing a receiver on destination when the message is sending 
+   Those are changed in configuration file with:
+	-network:rec_algr
+	default number is 0, which is fixed mathod
+
+7. There are two conflict resolution for network:
+	0 -- is ideal condition which is receiver the message without considering the conflictions
+	1 -- is condition resolution method which considers the message confliction
+   Those are changed in the configuration file with:
+	-network:net_algr
+	default number is 0, which is ideal case
+
+8. Due to the issue bandwidth, there is possibility that two request from a same node to a same destination at the same time. This causes a conflict. 
+	To prevent this situation, CONF_EVENT is defined in <cache.c>
+
+9. RESEND solution is defined in CONF_RES_RESEND in <cache.h>
+	RESEND solve the confliction by resend the request after a certain period.
+	Period time is based on 120 cycles plus a random range(0-20), 120 cycles could be changed based on how many cycles does handling an event cost. 
+	There is a sending event queue which stores all the request due to a Read miss. There is a replying event queue which stores all the data replys to a request. When a request is resend, it will check the reply queue to see if there is already a reply there. If it does, throw the resend request away, otherwise response the request. 
+
+

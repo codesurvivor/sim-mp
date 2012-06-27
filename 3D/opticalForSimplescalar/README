@@ -1,0 +1,65 @@
+OPTICAL NETWORK
+
+################## Make it work ###################
+1. make clean:
+	clean up all the *.o files.
+
+2. make: 
+	compile all the *.c files.
+
+################## Clock Cycle ####################
+1. Our Processor runs at 2.5GHz. Laser can run at 10GHz. So we have:
+	4 Laser cycle = 1 CPU cycle
+2. Transmitter size is 16 bits. which means 16 bits can be transmitted in one laser cycle.
+
+3. Network cycle is the time spending on one flit transfer. 
+	Network cycle = Flit_transfer_time = Flit_size/(laser_cycle * transmitter_size)
+
+
+################## Packet size ####################
+1. META (Type 1 = INV)
+	= Address (40 bits) + message_type ID (5 bits) + thread identy ID (8 bits) + meta ID (5 bits) + packet_type (2 bits)
+	= 60 bits
+
+2. META (Type 2 = ACK)
+	= message_type ID (5 bits) + thread identy ID (8 bits) + meta ID (5 bits) + packet_type (2 bits)
+	= 20 bits
+
+3. DATA (Type 1)
+	= DATA_size (32 bytes = 256 bits) + meta_type2 (20 bits)
+	= 276 bits
+
+4. DATA (Type 2 = Write back)
+	= DATA_size (256 bits) + meta_type1 (60 bits)
+	= 296 bits
+
+
+################ Configuration #####################
+Depend on above discussion, we have the following network configuration
+
+1. Flit Size = 64 bits
+
+2. Network cycle = 64/64 = 1 = CPU cycle 
+
+3. META Packet size = 1 flit = 64 bits
+
+4. DATA Packet size = 5 flits 
+
+5. META packet transmit time = 1 cycle
+
+6. DATA packet transmit time = 5 cycle
+
+7. LASER warm up time = 20 cycles
+
+8. Laser set up time = 2 cycles
+
+9. Laser switch off time_out = 5 cycles
+
+10*. DATA transfer time slot 
+
+
+Hardcoding: sim_routing:
+PidTableCheck(): 763 line: tempid >> PID_shift != 1 && 3 && 23 && 21, these are the node which are not used for memory ports.
+
+input_buffer.c: 
+input_buffer_lockup: 438 line: src == 0 || src == 2 || src == 20 || src == 22, those should be the node are used for memory ports.
